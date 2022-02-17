@@ -8,8 +8,10 @@ interface IRequest {
 class ListAllUsersUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
-  execute({ user_id }: IRequest): User[] {
-    // Complete aqui
+  execute(): User[] {
+
+    const allUsers = this.usersRepository.list();
+    return allUsers;
   }
 }
 
