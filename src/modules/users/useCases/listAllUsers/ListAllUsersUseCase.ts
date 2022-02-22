@@ -9,20 +9,24 @@ class ListAllUsersUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
   execute({ user_id }: IRequest): User[] {
-    const isUserAdmin = this.verifyUserAdmin(user_id);
-
-    if(isUserAdmin){
-      const allUsers = this.usersRepository.list();
-      return allUsers;
+    const user = this.usersRepository.findById(user_id);
+    
+    if(!user){
+      throw new Error("Mensagem do erro");
     }
 
-    return[];
+    const isUserAdmin = this.verifyUserAdmin(user);
+
+    if(!isUserAdmin){
+      throw new Error("Mensagem do erro");
+    }
+    
+    const allUsers = this.usersRepository.list();
+    return allUsers;
   }
 
-  verifyUserAdmin(user_id: IRequest): boolean{
-    const user = this.usersRepository.findById(user_id);
-
-    if(user && user.admin){
+  verifyUserAdmin(user: User): boolean{
+    if(user.admin){
       return true;
     }
     return false;
